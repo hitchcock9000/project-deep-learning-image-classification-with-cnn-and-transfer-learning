@@ -1,58 +1,143 @@
-![logo_ironhack_blue 7](https://user-images.githubusercontent.com/23629340/40541063-a07a0a8a-601a-11e8-91b5-2f13e4e6b441.png)
+# Deep Learning Image Classification Project
 
-# Project | Deep Learning: Image Classification using CNN and Transfer Learning
+## Project Overview
+This project implements image classification on the CIFAR-10 dataset using two approaches:
+1. **Custom CNN**: A convolutional neural network built from scratch
+2. **Transfer Learning**: Using pre-trained models (VGG16, ResNet50, MobileNetV2)
 
-## Task Description
-
-In this project, students will first build a **Convolutional Neural Network (CNN)** model from scratch to classify images from a given dataset into predefined categories. Then, they will implement a **transfer learning approach** using a pre-trained model. Finally, students will **compare the performance** of the custom CNN and the transfer learning model based on evaluation metrics and analysis.
+## Project Structure
+```
+.
+├── notebooks/
+│   ├── 1_data_exploration.ipynb    # Data loading and visualization
+│   ├── 2_custom_cnn.ipynb          # Custom CNN implementation
+│   ├── 3_transfer_learning.ipynb   # Transfer learning implementation
+│   └── 4_comparison.ipynb          # Model comparison
+├── data/                           # Saved models and results
+├── requirements.txt                # Python dependencies
+└── README.md                       # This file
+```
 
 ## Dataset
+**CIFAR-10** consists of 60,000 32x32 color images in 10 classes:
+- airplane, automobile, bird, cat, deer, dog, frog, horse, ship, truck
+- 50,000 training images
+- 10,000 test images
 
-The dataset for this task is the CIFAR-10 dataset, which consists of 60,000 32x32 color images in 10 classes, with 6,000 images per class. You can download the dataset from [here](https://www.cs.toronto.edu/~kriz/cifar.html).
+Dataset location: `/Users/nim/Downloads/cifar-10-batches-py`
 
+## Installation
 
-## Assessment Components
+### 1. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
 
-1.  **Data Preprocessing**
-    
-    *   Data loading and preprocessing (e.g., normalization, resizing, augmentation).
-    *   Create visualizations of some images, and labels.
-2.  **Model Architecture**
-    
-    *   Design a CNN architecture suitable for image classification.
-    *   Include convolutional layers, pooling layers, and fully connected layers.
-3.  **Model Training**
-    
-    *   Train the CNN model using appropriate optimization techniques (e.g., stochastic gradient descent, Adam).
-    *   Utilize techniques such as early stopping to prevent overfitting.
-4.  **Model Evaluation**
-    
-    *   Evaluate the trained model on a separate validation set.
-    *   Compute and report metrics such as accuracy, precision, recall, and F1-score.
-    *   Visualize the confusion matrix to understand model performance across different classes.
-5.  **Transfer Learning**
-    
-    *   Perform transfer learning with your chosen pre-trained models i.e., you will probably try a few and choose the best one (e.g., VGG16, Inception, ResNet trained on ImageNet)  
-        *   You may find this [link](https://www.tensorflow.org/tutorials/images/transfer_learning_with_hub) helpful.
-        *   [This](https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html) is the Pytorch version.
-    *   Train and evaluate the transfer learning model.
-    *   Compare its performance against your custom CNN.
-    *   Discuss advantages and trade-offs of using transfer learning over building a model from scratch.
-        
-6.  **Code Quality**
-    
-    *   Well-structured and commented code.
+### 2. Verify Dataset
+Ensure the CIFAR-10 dataset is available at the specified path.
 
-## Submission Details
+## Usage
 
-*   Deadline for submission: end of the week or as communicated by your teaching team.
-*   Submit the following:
-    1.  Python code files (`*.py`, `ipynb`) containing the model implementation and training process.
-    2.  Any additional files necessary for reproducing the results (e.g., requirements.txt, README.md).
-    3.  PPT presentation
+### Using Jupyter Notebooks
 
-## Additional Notes
+1. Start Jupyter:
+```bash
+jupyter notebook
+```
 
-*   Students are encourage to experiment with different architectures, hyper-parameters, and optimization techniques.
-*   Provide guidance and resources for troubleshooting common issues during model training and evaluation.
-*   Students will discuss their approaches and findings in class during assessment evaluation sessions.
+2. Navigate to the `notebooks/` directory
+
+3. Run notebooks in order:
+   - `1_data_exploration.ipynb` - Explore the dataset
+   - `2_custom_cnn.ipynb` - Train custom CNN
+   - `3_transfer_learning.ipynb` - Train transfer learning model
+   - `4_comparison.ipynb` - Compare results
+
+## Model Architectures
+
+### Custom CNN
+- 3 Convolutional blocks (32, 64, 128 filters)
+- Batch Normalization after each conv layer
+- MaxPooling and Dropout for regularization
+- Fully connected layers with 256 units
+- Total parameters: ~1.5M
+
+### Transfer Learning
+- Pre-trained base (frozen weights)
+- Global Average Pooling
+- Dense layer (256 units)
+- Dropout for regularization
+- Fine-tuned for CIFAR-10
+
+## Training Details
+
+### Data Preprocessing
+- Normalization: Pixel values scaled to [0, 1]
+- Train/Val split: 80/20
+- Data augmentation:
+  - Random rotation (±15°)
+  - Width/height shift (±10%)
+  - Horizontal flip
+
+### Training Configuration
+- Optimizer: Adam
+- Loss: Sparse Categorical Crossentropy
+- Batch size: 64
+- Early stopping: Patience of 10 epochs
+- Model checkpointing: Save best model based on validation accuracy
+
+## Expected Results
+
+### Custom CNN
+- Expected accuracy: 70-75%
+- Training time: ~30-40 minutes (CPU), ~5-10 minutes (GPU)
+
+### Transfer Learning (MobileNetV2)
+- Expected accuracy: 75-85%
+- Training time: ~20-30 minutes (CPU), ~3-5 minutes (GPU)
+
+## Evaluation Metrics
+- **Accuracy**: Overall classification accuracy
+- **Precision**: Per-class precision
+- **Recall**: Per-class recall
+- **F1-Score**: Harmonic mean of precision and recall
+- **Confusion Matrix**: Visual representation of predictions
+
+## Next Steps
+
+1. **Install dependencies**: `pip install -r requirements.txt`
+2. **Run data exploration**: Open `notebooks/1_data_exploration.ipynb`
+3. **Train models**: Run the custom CNN and transfer learning scripts
+4. **Compare results**: Use `compare_models.py` or the comparison notebook
+5. **Prepare presentation**: Document findings and create PPT
+
+## Tips for Better Results
+
+1. **Increase epochs**: If training stops early, increase the patience parameter
+2. **Try different architectures**: Experiment with more/fewer layers
+3. **Adjust learning rate**: Try different learning rates (0.0001, 0.001, 0.01)
+4. **More augmentation**: Add more aggressive data augmentation
+5. **Fine-tuning**: Unfreeze some layers of the pre-trained model for fine-tuning
+
+## Troubleshooting
+
+### Out of Memory
+- Reduce batch size to 32 or 16
+- Use a lighter model (MobileNetV2 instead of VGG16)
+
+### Slow Training
+- Use GPU if available
+- Reduce number of epochs
+- Use a smaller model
+
+### Poor Accuracy
+- Check data preprocessing
+- Increase model complexity
+- Add more data augmentation
+- Train for more epochs
+
+## Team Members
+- Natasha Silvestre
+
+## License
+This project is for educational purposes as part of the Ironhack bootcamp.
